@@ -36,7 +36,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepack": "pnpm run build",
-    "health": "repnix check",
+    "health": "pnpm run build && repnix check",
     "health:dead-code": "knip",
     "health:duplication": "jscpd src",
     "health:package:publint": "publint",

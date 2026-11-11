@@ -1,8 +1,8 @@
 # Panel Frame
 
-Panel Frame is a React UI package for the shared dashboards and account screens in the Visitoring, Perminister, Nanogres, and Postparticle applications.
+Panel Frame is a reusable React UI package for dashboards, account screens, and shared application interfaces.
 
-The package standardizes structure and interaction patterns while letting each application provide its own brand, route links, account actions, and semantic theme colors.
+It standardizes structure and interaction patterns while letting each consuming application provide its own brand, route links, account actions, and semantic theme colors.
 
 ## Install
 
@@ -43,7 +43,7 @@ import { DashboardShell } from "panel-frame-ui";
 ```
 
 Use `pf-sidebar-group`, `pf-sidebar-group-label`, and `pf-sidebar-link` for a consistent navigation hierarchy and active state.
-Set `contentAsMain={false}` when the page content already provides its own `<main>` landmark.
+Set `contentAsMain={false}` when the page content already provides its own `<main>` landmark. When `sidebarContext` contains multiple controls, group them in a `<div>` to give them consistent spacing.
 
 ## Authentication shell
 

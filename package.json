@@ -2,6 +2,7 @@
   "name": "panel-frame-ui",
   "version": "0.1.0",
   "description": "Shared dashboard and account UI for Panel Frame projects",
+  "packageManager": "pnpm@12.16.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zakaihamilton/panel-frame-ui.git"
@@ -11,8 +12,14 @@
     "url": "https://github.com/zakaihamilton/panel-frame-ui/issues"
   },
   "type": "module",
-  "sideEffects": ["./styles.css"],
-  "files": ["dist", "styles.css", "README.md"],
+  "sideEffects": [
+    "./styles.css"
+  ],
+  "files": [
+    "dist",
+    "styles.css",
+    "README.md"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -24,14 +31,24 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "prepack": "pnpm run build"
+    "prepack": "pnpm run build",
+    "health": "repnix check",
+    "health:dead-code": "knip",
+    "health:duplication": "jscpd src",
+    "health:package:publint": "publint",
+    "health:package:types": "attw --pack ."
   },
   "peerDependencies": {
     "react": ">=19.0.0 <20.0.0",
     "react-dom": ">=19.0.0 <20.0.0"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@types/react": "^19.3.0",
+    "jscpd": "^5.4.3",
+    "knip": "^6.44.2",
+    "publint": "^0.3.25",
+    "repnix": "^1.1.0",
     "typescript": "^6.0.3"
   }
 }

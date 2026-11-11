@@ -1,0 +1,4 @@
+{
+  "entrypoints": ["."],
+  "profile": "esm-only"
+}

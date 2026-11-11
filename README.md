@@ -60,3 +60,9 @@ The app owns all form actions, identity-provider links, and recovery URLs. Panel
 The package exports `DashboardShell`, `AuthShell`, `AuthCard`, `Button`, `Card`, `Badge`, `Alert`, `Field`, `TextField`, `SelectField`, `EmptyState`, `Skeleton`, `PageHeader`, and `ThemeSelect`.
 
 React and React DOM are peer dependencies. The package does not depend on Next.js; pass framework links as React children in the app-owned navigation.
+
+## Repository checks
+
+Run `pnpm health` to check type safety, unused code, duplication, and package exports. GitHub Actions runs the health checks on pushes and pull requests, including dependency vulnerability, secret, and workflow syntax scans.
+
+The package is ESM-only. Are The Types Wrong? checks the JavaScript entry point; Publint checks the stylesheet export and published files.

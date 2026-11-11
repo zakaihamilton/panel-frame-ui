@@ -17,11 +17,13 @@
   },
   "type": "module",
   "sideEffects": [
-    "./styles.css"
+    "./styles.css",
+    "./styles/*.css"
   ],
   "files": [
     "dist",
     "styles.css",
+    "styles",
     "styles.css.d.ts",
     "README.md",
     "LICENSE",

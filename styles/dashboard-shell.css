@@ -1,0 +1,229 @@
+.pf-dashboard-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: var(--pf-sidebar-width) minmax(0, 1fr);
+  color: var(--pf-text);
+  background: var(--pf-background);
+  font-family: var(--pf-font, inherit);
+}
+
+.pf-dashboard-shell[data-sidebar-visible="false"] {
+  grid-template-columns: 0 minmax(0, 1fr);
+}
+
+.pf-dashboard-shell[data-sidebar-visible="false"] .pf-sidebar {
+  width: 0;
+  padding-right: 0;
+  padding-left: 0;
+  overflow: hidden;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pf-skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 12px;
+  left: 12px;
+  padding: 10px 14px;
+  border-radius: var(--pf-radius-sm);
+  color: var(--pf-accent-contrast);
+  background: var(--pf-accent);
+  transform: translateY(-160%);
+}
+
+.pf-skip-link:focus {
+  transform: translateY(0);
+}
+
+.pf-sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  width: var(--pf-sidebar-width);
+  height: 100vh;
+  min-height: 520px;
+  flex-direction: column;
+  padding: 20px 14px 14px;
+  overflow-y: auto;
+  border-right: 1px solid var(--pf-border);
+  color: var(--pf-text);
+  background: var(--pf-surface);
+}
+
+.pf-sidebar-brand {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  padding: 0 10px 17px;
+}
+
+.pf-sidebar-brand > a,
+.pf-brand {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  font-size: 17px;
+  font-weight: 720;
+  letter-spacing: -0.035em;
+  text-decoration: none;
+}
+
+.pf-sidebar-context {
+  margin: 0 0 16px;
+}
+
+.pf-sidebar-context > div {
+  display: grid;
+  gap: 8px;
+}
+
+.pf-sidebar-context > div > :where(a, form, div) {
+  min-width: 0;
+}
+
+.pf-sidebar-navigation {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+}
+
+.pf-sidebar-group {
+  display: grid;
+  gap: 4px;
+  margin: 12px 0 8px;
+}
+
+.pf-sidebar-group-label {
+  margin: 0 10px 5px;
+  color: var(--pf-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.pf-sidebar-link {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 11px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--pf-radius-sm);
+  color: var(--pf-muted);
+  font-size: 13px;
+  font-weight: 590;
+  line-height: 1.35;
+  text-decoration: none;
+  transition:
+    color var(--pf-motion-fast) ease,
+    background-color var(--pf-motion-fast) ease,
+    border-color var(--pf-motion-fast) ease;
+}
+
+.pf-sidebar-link:hover {
+  color: var(--pf-text);
+  background: color-mix(in srgb, var(--pf-accent) 7%, var(--pf-surface));
+}
+
+.pf-sidebar-link[aria-current="page"],
+.pf-sidebar-link[data-active="true"] {
+  border-color: color-mix(in srgb, var(--pf-accent) 18%, var(--pf-border));
+  color: var(--pf-accent);
+  background: color-mix(in srgb, var(--pf-accent) 10%, var(--pf-surface));
+  font-weight: 700;
+}
+
+.pf-sidebar-link :where(svg, [data-icon]) {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.pf-sidebar-spacer {
+  flex: 1 0 18px;
+}
+
+.pf-sidebar-footer {
+  display: grid;
+  gap: 10px;
+  padding: 12px 8px 2px;
+  border-top: 1px solid var(--pf-border);
+}
+
+.pf-dashboard-main {
+  min-width: 0;
+  min-height: 100vh;
+}
+
+.pf-dashboard-toolbar {
+  position: sticky;
+  z-index: 20;
+  top: 0;
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 8px clamp(18px, 3vw, 42px);
+  border-bottom: 1px solid var(--pf-border);
+  background: color-mix(in srgb, var(--pf-background) 92%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.pf-toolbar-content {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.pf-toolbar-title {
+  margin-right: auto;
+  color: var(--pf-muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.pf-account-label {
+  overflow: hidden;
+  color: var(--pf-muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pf-sign-out {
+  width: 100%;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+
+.pf-mobile-menu-button {
+  display: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--pf-border);
+  border-radius: var(--pf-radius-sm);
+  color: var(--pf-text);
+  background: var(--pf-surface);
+  font: inherit;
+  cursor: pointer;
+}
+
+.pf-dashboard-content {
+  width: min(100%, var(--pf-content-width));
+  min-width: 0;
+  margin: 0 auto;
+  padding: clamp(20px, 3vw, 42px);
+}

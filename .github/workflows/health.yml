@@ -26,6 +26,7 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: 1.27.3
+          cache: false
       - run: pnpm install --frozen-lockfile
       - name: Install RepNix security and workflow scanners
         run: |

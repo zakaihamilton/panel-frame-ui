@@ -1,7 +1,7 @@
 {
   "name": "panel-frame-ui",
   "version": "0.1.1",
-  "description": "Shared dashboard and account UI for Panel Frame projects",
+  "description": "Reusable dashboard and account UI components for React applications",
   "license": "MIT",
   "engines": {
     "node": ">=22.14.0"

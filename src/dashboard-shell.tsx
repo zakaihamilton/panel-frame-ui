@@ -20,7 +20,7 @@ export type DashboardShellProps = {
 };
 
 const focusableSelector =
-  'a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])';
+  'a[href], button:not(:disabled), input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])';
 
 export function DashboardShell({
   brand,
@@ -36,6 +36,7 @@ export function DashboardShell({
   const [mobileOpen, setMobileOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const wasMobileOpenRef = useRef(false);
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 780px)");
@@ -49,6 +50,17 @@ export function DashboardShell({
   }, []);
 
   useEffect(() => {
+    if (mobileOpen) {
+      wasMobileOpenRef.current = true;
+      return;
+    }
+    if (wasMobileOpenRef.current) {
+      wasMobileOpenRef.current = false;
+      if (isMobile) triggerRef.current?.focus();
+    }
+  }, [isMobile, mobileOpen]);
+
+  useEffect(() => {
     if (!isMobile || !mobileOpen) return;
 
     const previousOverflow = document.body.style.overflow;
@@ -57,28 +69,38 @@ export function DashboardShell({
       Array.from(
         sidebarRef.current?.querySelectorAll<HTMLElement>(focusableSelector) ??
           [],
-      ).filter((element) => !element.hasAttribute("hidden"));
+      ).filter(
+        (element) =>
+          !element.closest('[hidden], [inert], [aria-hidden="true"]'),
+      );
 
-    focusable()[0]?.focus();
+    const first = focusable()[0];
+    (first ?? sidebarRef.current)?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        setMobileOpen(false);
-        triggerRef.current?.focus();
+        closeDrawer();
         return;
       }
       if (event.key !== "Tab") return;
       const elements = focusable();
-      const first = elements[0];
-      const last = elements.at(-1);
-      if (!first || !last) {
+      const firstFocusable = elements[0];
+      const lastFocusable = elements.at(-1);
+      if (!firstFocusable || !lastFocusable) {
         event.preventDefault();
-      } else if (event.shiftKey && document.activeElement === first) {
+        sidebarRef.current?.focus();
+      } else if (!sidebarRef.current?.contains(document.activeElement)) {
         event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+        (event.shiftKey ? lastFocusable : firstFocusable).focus();
+      } else if (document.activeElement === sidebarRef.current) {
         event.preventDefault();
-        first.focus();
+        (event.shiftKey ? lastFocusable : firstFocusable).focus();
+      } else if (event.shiftKey && document.activeElement === firstFocusable) {
+        event.preventDefault();
+        lastFocusable.focus();
+      } else if (!event.shiftKey && document.activeElement === lastFocusable) {
+        event.preventDefault();
+        firstFocusable.focus();
       }
     };
 
@@ -95,13 +117,12 @@ export function DashboardShell({
       event.target instanceof Element &&
       event.target.closest("a[href]")
     ) {
-      setMobileOpen(false);
+      closeDrawer();
     }
   }
 
   function closeDrawer() {
     setMobileOpen(false);
-    triggerRef.current?.focus();
   }
 
   return (
@@ -110,7 +131,12 @@ export function DashboardShell({
       data-mobile-open={mobileOpen ? "true" : "false"}
       data-sidebar-visible={sidebarVisible ? "true" : "false"}
     >
-      <a className="pf-skip-link" href="#pf-main-content">
+      <a
+        aria-hidden={isMobile && mobileOpen ? true : undefined}
+        className="pf-skip-link"
+        href="#pf-main-content"
+        inert={isMobile && mobileOpen}
+      >
         Skip to main content
       </a>
       <aside
@@ -150,7 +176,11 @@ export function DashboardShell({
         />
       ) : null}
 
-      <div className="pf-dashboard-main">
+      <div
+        aria-hidden={isMobile && mobileOpen ? true : undefined}
+        className="pf-dashboard-main"
+        inert={isMobile && mobileOpen}
+      >
         <header className="pf-dashboard-toolbar">
           <button
             aria-controls="pf-dashboard-sidebar"

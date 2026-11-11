@@ -107,11 +107,19 @@ export function Field({
   );
 }
 
+function mergeDescribedBy(...values: (string | undefined)[]) {
+  const ids = values.flatMap((value) => value?.split(/\s+/) ?? []);
+  return [...new Set(ids.filter(Boolean))].join(" ") || undefined;
+}
+
 export function TextField({
   label,
   hint,
   error,
   id,
+  className = "",
+  "aria-describedby": ariaDescribedBy,
+  "aria-invalid": ariaInvalid,
   ...inputProps
 }: Omit<InputHTMLAttributes<HTMLInputElement>, "id"> & {
   label: string;
@@ -122,7 +130,16 @@ export function TextField({
   return (
     <Field label={label} hint={hint} error={error} id={id}>
       {(fieldProps) => (
-        <input className="pf-input" {...fieldProps} {...inputProps} />
+        <input
+          {...fieldProps}
+          {...inputProps}
+          aria-describedby={mergeDescribedBy(
+            fieldProps["aria-describedby"],
+            ariaDescribedBy,
+          )}
+          aria-invalid={error ? true : ariaInvalid}
+          className={`pf-input ${className}`.trim()}
+        />
       )}
     </Field>
   );
@@ -134,6 +151,9 @@ export function SelectField({
   error,
   id,
   children,
+  className = "",
+  "aria-describedby": ariaDescribedBy,
+  "aria-invalid": ariaInvalid,
   ...selectProps
 }: Omit<SelectHTMLAttributes<HTMLSelectElement>, "id"> & {
   label: string;
@@ -145,7 +165,16 @@ export function SelectField({
   return (
     <Field label={label} hint={hint} error={error} id={id}>
       {(fieldProps) => (
-        <select className="pf-input pf-select" {...fieldProps} {...selectProps}>
+        <select
+          {...fieldProps}
+          {...selectProps}
+          aria-describedby={mergeDescribedBy(
+            fieldProps["aria-describedby"],
+            ariaDescribedBy,
+          )}
+          aria-invalid={error ? true : ariaInvalid}
+          className={`pf-input pf-select ${className}`.trim()}
+        >
           {children}
         </select>
       )}

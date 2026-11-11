@@ -63,6 +63,6 @@ React and React DOM are peer dependencies. The package does not depend on Next.j
 
 ## Repository checks
 
-Run `pnpm health` to build the package and check type safety, unused code, duplication, and package exports. GitHub Actions runs the health checks on pushes and pull requests, including dependency vulnerability, secret, and workflow syntax scans.
+Run `pnpm health` to build the package and check type safety, unused code, duplication, and package exports. GitHub Actions runs those checks on pushes and pull requests, along with OSV-Scanner for dependency vulnerabilities, Gitleaks for secrets, and actionlint for workflow syntax.
 
 The package is ESM-only. Are The Types Wrong? checks the JavaScript entry point; Publint checks the stylesheet export and published files.

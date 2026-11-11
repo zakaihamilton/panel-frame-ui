@@ -1,0 +1,33 @@
+:root {
+  --pf-background: #f5f7f6;
+  --pf-surface: #ffffff;
+  --pf-surface-raised: #ffffff;
+  --pf-text: #202b28;
+  --pf-muted: #65716d;
+  --pf-border: #dfe6e2;
+  --pf-accent: #236b55;
+  --pf-accent-contrast: #ffffff;
+  --pf-danger: #a44040;
+  --pf-danger-surface: #fff0ed;
+  --pf-success: #276147;
+  --pf-success-surface: #e7f3eb;
+  --pf-warning: #795920;
+  --pf-warning-surface: #fbf1d8;
+  --pf-sidebar-width: 256px;
+  --pf-content-width: 1440px;
+  --pf-radius-sm: 7px;
+  --pf-radius-md: 11px;
+  --pf-radius-lg: 16px;
+  --pf-shadow: 0 14px 38px rgb(23 43 34 / 8%);
+  --pf-focus: var(--pf-accent);
+  --pf-motion-fast: 150ms;
+  --pf-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pf-dashboard-shell,
+.pf-dashboard-shell *,
+.pf-auth-shell,
+.pf-auth-shell *,
+.pf-component {
+  box-sizing: border-box;
+}

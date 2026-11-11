@@ -1,0 +1,137 @@
+@media (max-width: 780px) {
+  .pf-dashboard-shell {
+    display: block;
+  }
+
+  .pf-dashboard-shell[data-sidebar-visible="false"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pf-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(var(--pf-sidebar-width), calc(100vw - 56px));
+    height: 100dvh;
+    min-height: 0;
+    transform: translateX(-105%);
+    visibility: hidden;
+    transition:
+      transform 220ms var(--pf-ease),
+      visibility 220ms;
+  }
+
+  .pf-dashboard-shell[data-sidebar-visible="false"] .pf-sidebar {
+    width: min(var(--pf-sidebar-width), calc(100vw - 56px));
+    padding: 20px 14px 14px;
+    border-right: 1px solid var(--pf-border);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .pf-dashboard-shell[data-mobile-open="true"] .pf-sidebar {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .pf-sidebar-backdrop {
+    position: fixed;
+    z-index: 25;
+    inset: 0;
+    display: block;
+    border: 0;
+    background: rgb(0 0 0 / 38%);
+  }
+
+  .pf-mobile-menu-button {
+    display: inline-flex;
+    flex: 0 0 auto;
+    margin-right: auto;
+  }
+
+  .pf-dashboard-toolbar {
+    min-height: 56px;
+    padding: 7px 14px;
+  }
+
+  .pf-dashboard-content {
+    padding: 20px 16px 32px;
+  }
+
+  .pf-auth-layout {
+    min-height: calc(100vh - 32px);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pf-auth-aside {
+    min-height: 190px;
+    padding: 22px 24px;
+  }
+
+  .pf-auth-aside-content {
+    gap: 9px;
+    padding: 24px 0 4px;
+  }
+
+  .pf-auth-aside-content h1,
+  .pf-auth-aside-content h2 {
+    font-size: clamp(1.65rem, 8vw, 2.35rem);
+  }
+
+  .pf-auth-aside-footer {
+    display: none;
+  }
+
+  .pf-auth-main {
+    padding: 24px;
+  }
+
+  .pf-auth-utility {
+    top: 10px;
+    right: 10px;
+  }
+}
+
+@media (max-width: 520px) {
+  .pf-auth-shell {
+    padding: 0;
+  }
+
+  .pf-auth-layout {
+    min-height: 100vh;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .pf-auth-aside {
+    min-height: 150px;
+    padding: 18px 20px;
+  }
+
+  .pf-auth-main {
+    padding: 22px 18px;
+  }
+
+  .pf-auth-card {
+    padding: 20px;
+  }
+
+  .pf-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pf-page-actions {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-dashboard-shell *,
+  .pf-auth-shell *,
+  .pf-component * {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

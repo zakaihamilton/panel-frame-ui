@@ -1,4 +1,11 @@
-import { useId, type ButtonHTMLAttributes, type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from "react";
+import {
+  useId,
+  type ButtonHTMLAttributes,
+  type HTMLAttributes,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type SelectHTMLAttributes,
+} from "react";
 
 export type ButtonVariant = "primary" | "secondary" | "quiet" | "danger";
 
@@ -31,7 +38,12 @@ export function Badge({
 }: HTMLAttributes<HTMLSpanElement> & {
   tone?: "neutral" | "success" | "warning" | "danger" | "accent";
 }) {
-  return <span className={`pf-badge pf-badge-${tone} ${className}`.trim()} {...props} />;
+  return (
+    <span
+      className={`pf-badge pf-badge-${tone} ${className}`.trim()}
+      {...props}
+    />
+  );
 }
 
 export function Alert({
@@ -81,8 +93,16 @@ export function Field({
         "aria-describedby": describedBy,
         "aria-invalid": error ? true : undefined,
       })}
-      {hint ? <span className="pf-field-hint" id={hintId}>{hint}</span> : null}
-      {error ? <span className="pf-field-error" id={errorId}>{error}</span> : null}
+      {hint ? (
+        <span className="pf-field-hint" id={hintId}>
+          {hint}
+        </span>
+      ) : null}
+      {error ? (
+        <span className="pf-field-error" id={errorId}>
+          {error}
+        </span>
+      ) : null}
     </label>
   );
 }
@@ -101,7 +121,9 @@ export function TextField({
 }) {
   return (
     <Field label={label} hint={hint} error={error} id={id}>
-      {(fieldProps) => <input className="pf-input" {...fieldProps} {...inputProps} />}
+      {(fieldProps) => (
+        <input className="pf-input" {...fieldProps} {...inputProps} />
+      )}
     </Field>
   );
 }
@@ -143,7 +165,9 @@ export function EmptyState({
   return (
     <section className="pf-empty-state">
       <h2>{title}</h2>
-      {description ? <div className="pf-empty-description">{description}</div> : null}
+      {description ? (
+        <div className="pf-empty-description">{description}</div>
+      ) : null}
       {action ? <div className="pf-empty-action">{action}</div> : null}
     </section>
   );
@@ -153,7 +177,13 @@ export function Skeleton({
   className = "",
   ...props
 }: HTMLAttributes<HTMLDivElement>) {
-  return <div aria-hidden="true" className={`pf-skeleton ${className}`.trim()} {...props} />;
+  return (
+    <div
+      aria-hidden="true"
+      className={`pf-skeleton ${className}`.trim()}
+      {...props}
+    />
+  );
 }
 
 export function PageHeader({
@@ -172,7 +202,9 @@ export function PageHeader({
       <div className="pf-page-heading">
         {eyebrow ? <p className="pf-page-eyebrow">{eyebrow}</p> : null}
         <h1>{title}</h1>
-        {description ? <p className="pf-page-description">{description}</p> : null}
+        {description ? (
+          <p className="pf-page-description">{description}</p>
+        ) : null}
       </div>
       {actions ? <div className="pf-page-actions">{actions}</div> : null}
     </header>

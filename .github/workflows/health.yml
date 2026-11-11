@@ -38,4 +38,6 @@ jobs:
         run: osv-scanner scan source --offline-vulnerabilities --download-offline-databases --format=json --recursive .
       - name: Scan repository history with Gitleaks
         run: gitleaks detect --source . --no-banner --redact --exit-code 1
+      - name: Check workflow syntax
+        run: actionlint
       - run: pnpm health

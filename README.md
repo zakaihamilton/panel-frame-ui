@@ -26,7 +26,11 @@ The shell owns the left sidebar, mobile drawer, toolbar, and right-hand page are
 import { DashboardShell } from "panel-frame-ui";
 
 <DashboardShell
-  brand={<a className="pf-brand" href="/dashboard">Product</a>}
+  brand={
+    <a className="pf-brand" href="/dashboard">
+      Product
+    </a>
+  }
   navigation={
     <a className="pf-sidebar-link" href="/dashboard" aria-current="page">
       Overview
@@ -35,7 +39,7 @@ import { DashboardShell } from "panel-frame-ui";
   toolbar={<AccountActions />}
 >
   <PageContent />
-</DashboardShell>
+</DashboardShell>;
 ```
 
 Use `pf-sidebar-group`, `pf-sidebar-group-label`, and `pf-sidebar-link` for a consistent navigation hierarchy and active state.
@@ -50,7 +54,7 @@ import { AuthCard, AuthShell } from "panel-frame-ui";
   <AuthCard>
     <LoginForm />
   </AuthCard>
-</AuthShell>
+</AuthShell>;
 ```
 
 The app owns all form actions, identity-provider links, and recovery URLs. Panel Frame only provides the common frame and visual primitives.
@@ -63,6 +67,16 @@ React and React DOM are peer dependencies. The package does not depend on Next.j
 
 ## Repository checks
 
-Run `pnpm health` to build the package and check type safety, unused code, duplication, and package exports. GitHub Actions runs those checks on pushes and pull requests, along with OSV-Scanner for dependency vulnerabilities, Gitleaks for secrets, and actionlint for workflow syntax.
+Run `pnpm health` to build the package, lint and format-check the source, run component tests, and check type safety, unused code, duplication, and package exports. GitHub Actions runs those checks on pushes and pull requests, along with OSV-Scanner for dependency vulnerabilities, Gitleaks for secrets, and actionlint for workflow syntax.
 
 The package is ESM-only. Are The Types Wrong? checks the JavaScript entry point; Publint checks the stylesheet export and published files.
+
+## Releases
+
+This repository uses Changesets. Add a changeset with `pnpm changeset` when a change is ready for release. Merging it to `main` opens or updates a version pull request. Merging that version pull request publishes the package and creates a GitHub release. Versioning permissions and npm publishing permissions are separated into different workflow jobs.
+
+The npm package is published publicly with npm trusted publishing from `.github/workflows/release.yml`. For the first publish, use Node 22.14 or later and npm 11.5.1 or later, run `pnpm install --frozen-lockfile` and `pnpm health`, then publish version `0.1.0` with `npm publish --access public` from an npm account you control. Then, in the package's npm settings, add a GitHub Actions trusted publisher for user `zakaihamilton`, repository `panel-frame-ui`, and workflow `release.yml`, and allow direct `npm publish`. Enable GitHub Actions to create pull requests in the repository settings. GitHub may ask a repository writer to approve the health workflow on the automatically created version pull request before its checks run.
+
+## License
+
+Panel Frame UI is available under the MIT License. See [LICENSE](./LICENSE).

@@ -55,7 +55,8 @@ export function DashboardShell({
     document.body.style.overflow = "hidden";
     const focusable = () =>
       Array.from(
-        sidebarRef.current?.querySelectorAll<HTMLElement>(focusableSelector) ?? [],
+        sidebarRef.current?.querySelectorAll<HTMLElement>(focusableSelector) ??
+          [],
       ).filter((element) => !element.hasAttribute("hidden"));
 
     focusable()[0]?.focus();
@@ -115,7 +116,9 @@ export function DashboardShell({
       <aside
         ref={sidebarRef}
         aria-hidden={
-          (isMobile && !mobileOpen) || (!isMobile && !sidebarVisible) ? true : undefined
+          (isMobile && !mobileOpen) || (!isMobile && !sidebarVisible)
+            ? true
+            : undefined
         }
         aria-label="Primary navigation"
         aria-modal={isMobile && mobileOpen ? true : undefined}
@@ -130,9 +133,7 @@ export function DashboardShell({
         {sidebarContext ? (
           <div className="pf-sidebar-context">{sidebarContext}</div>
         ) : null}
-        <div className="pf-sidebar-navigation">
-          {navigation}
-        </div>
+        <div className="pf-sidebar-navigation">{navigation}</div>
         <div className="pf-sidebar-spacer" />
         {sidebarFooter ? (
           <div className="pf-sidebar-footer">{sidebarFooter}</div>
@@ -165,11 +166,19 @@ export function DashboardShell({
           {toolbar ? <div className="pf-toolbar-content">{toolbar}</div> : null}
         </header>
         {contentAsMain ? (
-          <main className="pf-dashboard-content" id="pf-main-content" tabIndex={-1}>
+          <main
+            className="pf-dashboard-content"
+            id="pf-main-content"
+            tabIndex={-1}
+          >
             {children}
           </main>
         ) : (
-          <div className="pf-dashboard-content" id="pf-main-content" tabIndex={-1}>
+          <div
+            className="pf-dashboard-content"
+            id="pf-main-content"
+            tabIndex={-1}
+          >
             {children}
           </div>
         )}

@@ -262,9 +262,12 @@
   padding: clamp(20px, 3vw, 42px);
 }
 
-.pf-dashboard-shell :where(a, button, input, select, textarea, [tabindex]):focus-visible,
-.pf-auth-shell :where(a, button, input, select, textarea, [tabindex]):focus-visible,
-.pf-component :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+.pf-dashboard-shell
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible,
+.pf-auth-shell
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible,
+.pf-component
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
   outline: 3px solid color-mix(in srgb, var(--pf-focus) 72%, transparent);
   outline-offset: 3px;
 }
@@ -635,7 +638,9 @@
 }
 
 @keyframes pf-skeleton-pulse {
-  50% { opacity: 0.55; }
+  50% {
+    opacity: 0.55;
+  }
 }
 
 @media (max-width: 780px) {

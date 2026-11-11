@@ -8,7 +8,13 @@ export type AuthShellProps = {
   footer?: ReactNode;
 };
 
-export function AuthShell({ brand, aside, utility, children, footer }: AuthShellProps) {
+export function AuthShell({
+  brand,
+  aside,
+  utility,
+  children,
+  footer,
+}: AuthShellProps) {
   return (
     <main className="pf-auth-shell">
       <div className="pf-auth-layout">
@@ -26,6 +32,9 @@ export function AuthShell({ brand, aside, utility, children, footer }: AuthShell
   );
 }
 
-export function AuthCard({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+export function AuthCard({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLElement>) {
   return <section className={`pf-auth-card ${className}`.trim()} {...props} />;
 }

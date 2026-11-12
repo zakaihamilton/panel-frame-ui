@@ -16,6 +16,7 @@ import {
   type ReactNode,
   type ComponentProps,
 } from "react";
+import { mergeAriaDescriptionIds } from "./aria.js";
 
 type TooltipPlacement = "top" | "bottom" | "left" | "right";
 
@@ -45,11 +46,6 @@ type TooltipProps = {
 };
 
 type TooltipPosition = { left: number; top: number };
-
-function mergeIds(...values: (string | undefined)[]) {
-  const ids = values.flatMap((value) => value?.split(/\s+/) ?? []);
-  return [...new Set(ids.filter(Boolean))].join(" ") || undefined;
-}
 
 export function Tooltip({
   content,
@@ -158,7 +154,10 @@ export function Tooltip({
     trigger = (
       <button
         {...buttonProps}
-        aria-describedby={mergeIds(triggerDescribedBy, descriptionId)}
+        aria-describedby={mergeAriaDescriptionIds(
+          triggerDescribedBy,
+          descriptionId,
+        )}
         onBlur={(event) => {
           onTriggerBlur?.(event);
           handlers.onBlur(event);
@@ -241,7 +240,7 @@ export function Tooltip({
     const child = children as ReactElement<TriggerProps>;
     const childRef = child.props.ref;
     trigger = cloneElement(child, {
-      "aria-describedby": mergeIds(
+      "aria-describedby": mergeAriaDescriptionIds(
         child.props["aria-describedby"],
         descriptionId,
       ),

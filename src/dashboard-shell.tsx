@@ -38,9 +38,7 @@ export function DashboardShell({
   const sidebarRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const sidebarBrandRef = useRef<HTMLButtonElement>(null);
-  const toolbarBrandRef = useRef<HTMLButtonElement>(null);
   const wasMobileOpenRef = useRef(false);
-  const previousSidebarVisibleRef = useRef(sidebarVisible);
   const closeDrawer = useCallback(() => setMobileOpen(false), []);
 
   useEffect(() => {
@@ -64,13 +62,6 @@ export function DashboardShell({
       if (isMobile) triggerRef.current?.focus();
     }
   }, [isMobile, mobileOpen]);
-
-  useEffect(() => {
-    if (isMobile || previousSidebarVisibleRef.current === sidebarVisible)
-      return;
-    previousSidebarVisibleRef.current = sidebarVisible;
-    (sidebarVisible ? sidebarBrandRef : toolbarBrandRef).current?.focus();
-  }, [isMobile, sidebarVisible]);
 
   useEffect(() => {
     if (!isMobile || !mobileOpen) return;
@@ -141,7 +132,12 @@ export function DashboardShell({
     setSidebarVisible((visible) => !visible);
   }
 
-  const sidebarBrandLabel = isMobile ? "Close navigation" : "Collapse sidebar";
+  const sidebarBrandLabel = isMobile
+    ? "Close navigation"
+    : sidebarVisible
+      ? "Collapse sidebar"
+      : "Expand sidebar";
+  const sidebarContentsCollapsed = !isMobile && !sidebarVisible;
 
   return (
     <div
@@ -160,43 +156,55 @@ export function DashboardShell({
       {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: The sidebar becomes a dialog only while the mobile drawer is open. */}
       <aside
         ref={sidebarRef}
-        aria-hidden={
-          (isMobile && !mobileOpen) || (!isMobile && !sidebarVisible)
-            ? true
-            : undefined
-        }
+        aria-hidden={isMobile && !mobileOpen ? true : undefined}
         aria-label="Primary navigation"
         aria-modal={isMobile && mobileOpen ? true : undefined}
         className="pf-sidebar"
         id="pf-dashboard-sidebar"
-        inert={(isMobile && !mobileOpen) || (!isMobile && !sidebarVisible)}
+        inert={isMobile && !mobileOpen}
         onClick={closeAfterNavigation}
         role={isMobile && mobileOpen ? "dialog" : "complementary"}
         tabIndex={-1}
       >
-        {isMobile || sidebarVisible ? (
-          <div className="pf-sidebar-brand">
-            <Tooltip label={sidebarBrandLabel} placement="right">
-              <button
-                aria-controls="pf-dashboard-sidebar"
-                aria-expanded={isMobile ? mobileOpen : sidebarVisible}
-                className="pf-sidebar-brand-toggle"
-                onClick={toggleSidebar}
-                ref={sidebarBrandRef}
-                type="button"
-              >
-                {brand}
-              </button>
-            </Tooltip>
+        <div className="pf-sidebar-brand">
+          <Tooltip label={sidebarBrandLabel} placement="right">
+            <button
+              aria-controls="pf-dashboard-sidebar"
+              aria-expanded={isMobile ? mobileOpen : sidebarVisible}
+              className="pf-sidebar-brand-toggle"
+              onClick={toggleSidebar}
+              ref={sidebarBrandRef}
+              type="button"
+            >
+              <span className="pf-sidebar-brand-content">{brand}</span>
+            </button>
+          </Tooltip>
+        </div>
+        {sidebarContext ? (
+          <div
+            aria-hidden={sidebarContentsCollapsed ? true : undefined}
+            className="pf-sidebar-context"
+            inert={sidebarContentsCollapsed}
+          >
+            {sidebarContext}
           </div>
         ) : null}
-        {sidebarContext ? (
-          <div className="pf-sidebar-context">{sidebarContext}</div>
-        ) : null}
-        <div className="pf-sidebar-navigation">{navigation}</div>
-        <div className="pf-sidebar-spacer" />
+        <div
+          aria-hidden={sidebarContentsCollapsed ? true : undefined}
+          className="pf-sidebar-navigation"
+          inert={sidebarContentsCollapsed}
+        >
+          {navigation}
+        </div>
+        <div aria-hidden="true" className="pf-sidebar-spacer" />
         {sidebarFooter ? (
-          <div className="pf-sidebar-footer">{sidebarFooter}</div>
+          <div
+            aria-hidden={sidebarContentsCollapsed ? true : undefined}
+            className="pf-sidebar-footer"
+            inert={sidebarContentsCollapsed}
+          >
+            {sidebarFooter}
+          </div>
         ) : null}
       </aside>
 
@@ -216,20 +224,6 @@ export function DashboardShell({
         inert={isMobile && mobileOpen}
       >
         <header className="pf-dashboard-toolbar">
-          {!isMobile && !sidebarVisible ? (
-            <Tooltip label="Expand sidebar" placement="bottom">
-              <button
-                aria-controls="pf-dashboard-sidebar"
-                aria-expanded={sidebarVisible}
-                className="pf-toolbar-brand-toggle"
-                onClick={toggleSidebar}
-                ref={toolbarBrandRef}
-                type="button"
-              >
-                {brand}
-              </button>
-            </Tooltip>
-          ) : null}
           <button
             aria-controls="pf-dashboard-sidebar"
             aria-expanded={mobileOpen}

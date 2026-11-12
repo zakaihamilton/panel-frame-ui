@@ -1,5 +1,11 @@
 # panel-frame-ui
 
+## 0.2.2
+
+### Patch Changes
+
+- acea0a4: Rotate select chevrons while their menus are open, respecting reduced motion.
+
 ## 0.2.1
 
 ### Patch Changes

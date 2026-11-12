@@ -70,9 +70,13 @@ describe("DashboardShell", () => {
     fireEvent.click(trigger);
 
     const drawer = screen.getByRole("dialog", { name: "Primary navigation" });
+    const closeNavigation = screen.getByRole("button", { name: "Panel Frame" });
     expect(drawer.getAttribute("aria-modal")).toBe("true");
-    expect(document.activeElement).toBe(
-      screen.getByRole("button", { name: "Close navigation" }),
+    expect(document.activeElement).toBe(closeNavigation);
+    const descriptionId = closeNavigation.getAttribute("aria-describedby");
+    expect(descriptionId).toBeTruthy();
+    expect(document.getElementById(descriptionId!)?.textContent).toBe(
+      "Close navigation",
     );
     expect(document.body.style.overflow).toBe("hidden");
 
@@ -81,9 +85,7 @@ describe("DashboardShell", () => {
       screen.getByRole("link", { name: "Settings" }),
     );
     fireEvent.keyDown(document, { key: "Tab" });
-    expect(document.activeElement).toBe(
-      screen.getByRole("button", { name: "Close navigation" }),
-    );
+    expect(document.activeElement).toBe(closeNavigation);
 
     fireEvent.keyDown(document, { key: "Escape" });
 

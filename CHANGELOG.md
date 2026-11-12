@@ -1,5 +1,11 @@
 # panel-frame-ui
 
+## 0.2.4
+
+### Patch Changes
+
+- d35936c: Improve accessibility for mobile navigation and custom select controls.
+
 ## 0.2.3
 
 ### Patch Changes

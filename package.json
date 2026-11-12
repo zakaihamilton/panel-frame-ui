@@ -1,6 +1,6 @@
 {
   "name": "panel-frame-ui",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Reusable dashboard and account UI components for React applications",
   "license": "MIT",
   "engines": {

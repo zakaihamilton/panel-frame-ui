@@ -15,17 +15,35 @@
     min-height: 0;
     transform: translateX(-105%);
     visibility: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     transition:
       transform 220ms var(--pf-ease),
       visibility 220ms;
   }
 
   .pf-dashboard-shell[data-sidebar-visible="false"] .pf-sidebar {
-    width: min(var(--pf-sidebar-width), calc(100vw - 56px));
-    padding: 20px 14px 14px;
-    border-right: 1px solid var(--pf-border);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .pf-dashboard-shell[data-sidebar-visible="false"]
+    :where(.pf-sidebar-context, .pf-sidebar-navigation, .pf-sidebar-footer) {
+    visibility: visible;
     opacity: 1;
     pointer-events: auto;
+    transition: none;
+  }
+
+  .pf-dashboard-shell[data-sidebar-visible="false"] .pf-sidebar-brand-content {
+    max-width: 100%;
+  }
+
+  .pf-dashboard-shell[data-sidebar-visible="false"]
+    .pf-sidebar-brand-content
+    > .pf-brand
+    > :not(:first-child) {
+    opacity: 1;
   }
 
   .pf-dashboard-shell[data-mobile-open="true"] .pf-sidebar {
@@ -126,6 +144,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .pf-dashboard-shell {
+    transition-duration: 0.01ms !important;
+  }
+
   .pf-dashboard-shell *,
   .pf-auth-shell *,
   .pf-component * {

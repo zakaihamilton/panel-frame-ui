@@ -5,21 +5,11 @@
   color: var(--pf-text);
   background: var(--pf-background);
   font-family: var(--pf-font, inherit);
-  transition: grid-template-columns 220ms var(--pf-ease);
+  transition: grid-template-columns 260ms var(--pf-ease);
 }
 
 .pf-dashboard-shell[data-sidebar-visible="false"] {
-  grid-template-columns: 0 minmax(0, 1fr);
-}
-
-.pf-dashboard-shell[data-sidebar-visible="false"] .pf-sidebar {
-  width: 0;
-  padding-right: 0;
-  padding-left: 0;
-  overflow: hidden;
-  border: 0;
-  opacity: 0;
-  pointer-events: none;
+  grid-template-columns: var(--pf-sidebar-collapsed-width) minmax(0, 1fr);
 }
 
 .pf-skip-link {
@@ -43,7 +33,7 @@
   top: 0;
   z-index: 30;
   display: flex;
-  width: var(--pf-sidebar-width);
+  width: 100%;
   min-width: 0;
   height: 100vh;
   min-height: 520px;
@@ -53,12 +43,6 @@
   border-right: 1px solid var(--pf-border);
   color: var(--pf-text);
   background: var(--pf-surface);
-  transition:
-    width 220ms var(--pf-ease),
-    padding 220ms var(--pf-ease),
-    border-width 220ms var(--pf-ease),
-    opacity 160ms ease,
-    transform 220ms var(--pf-ease);
 }
 
 .pf-sidebar-brand {
@@ -68,8 +52,7 @@
   padding: 0 10px 17px;
 }
 
-.pf-sidebar-brand-toggle,
-.pf-toolbar-brand-toggle {
+.pf-sidebar-brand-toggle {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
@@ -84,25 +67,39 @@
 }
 
 .pf-sidebar-brand-toggle {
+  min-width: 0;
   width: 100%;
   min-height: 46px;
   padding: 0;
+  overflow: hidden;
 }
 
-.pf-toolbar-brand-toggle {
-  display: none;
-  min-height: 40px;
-  margin-right: auto;
-  padding: 0 10px;
+.pf-sidebar-brand-content {
+  display: inline-flex;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width 260ms var(--pf-ease);
 }
 
-.pf-sidebar-brand-toggle:hover,
-.pf-toolbar-brand-toggle:hover {
+.pf-sidebar-brand-content > .pf-brand > :not(:first-child) {
+  transition: opacity 120ms ease;
+}
+
+.pf-sidebar-brand-toggle:hover {
   background: color-mix(in srgb, var(--pf-accent) 7%, var(--pf-surface));
 }
 
-.pf-dashboard-shell[data-sidebar-visible="false"] .pf-toolbar-brand-toggle {
-  display: inline-flex;
+.pf-dashboard-shell[data-sidebar-visible="false"] .pf-sidebar-brand-content {
+  max-width: 36px;
+}
+
+.pf-dashboard-shell[data-sidebar-visible="false"]
+  .pf-sidebar-brand-content
+  > .pf-brand
+  > :not(:first-child) {
+  opacity: 0;
 }
 
 .pf-sidebar-brand > a,
@@ -199,6 +196,28 @@
   gap: 10px;
   padding: 12px 8px 2px;
   border-top: 1px solid var(--pf-border);
+}
+
+.pf-sidebar-context,
+.pf-sidebar-navigation,
+.pf-sidebar-footer {
+  transition:
+    opacity 150ms var(--pf-ease) 80ms,
+    visibility 0s;
+}
+
+.pf-dashboard-shell[data-sidebar-visible="false"] .pf-sidebar {
+  overflow: hidden;
+}
+
+.pf-dashboard-shell[data-sidebar-visible="false"]
+  :where(.pf-sidebar-context, .pf-sidebar-navigation, .pf-sidebar-footer) {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 100ms ease,
+    visibility 0s linear 220ms;
 }
 
 .pf-dashboard-main {

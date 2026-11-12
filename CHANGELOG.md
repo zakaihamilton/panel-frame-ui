@@ -1,5 +1,16 @@
 # panel-frame-ui
 
+## 0.2.0
+
+### Minor Changes
+
+- c472c0a: Add shared select and context switcher controls, modal dialogs, tooltip, and persisted theme provider utilities.
+
+### Patch Changes
+
+- 5f2c592: Remove application-specific naming from shared package documentation and sidebar styles.
+- 4e00d80: Split the exported stylesheet into focused CSS files while keeping the public import unchanged.
+
 ## 0.1.1
 
 ### Patch Changes

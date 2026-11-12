@@ -1,5 +1,11 @@
 # panel-frame-ui
 
+## 0.2.1
+
+### Patch Changes
+
+- 483541d: Animate sidebar collapse and expansion, and let dashboard toolbar content use the available width.
+
 ## 0.2.0
 
 ### Minor Changes

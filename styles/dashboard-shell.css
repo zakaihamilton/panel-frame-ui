@@ -5,6 +5,7 @@
   color: var(--pf-text);
   background: var(--pf-background);
   font-family: var(--pf-font, inherit);
+  transition: grid-template-columns 220ms var(--pf-ease);
 }
 
 .pf-dashboard-shell[data-sidebar-visible="false"] {
@@ -43,6 +44,7 @@
   z-index: 30;
   display: flex;
   width: var(--pf-sidebar-width);
+  min-width: 0;
   height: 100vh;
   min-height: 520px;
   flex-direction: column;
@@ -51,6 +53,12 @@
   border-right: 1px solid var(--pf-border);
   color: var(--pf-text);
   background: var(--pf-surface);
+  transition:
+    width 220ms var(--pf-ease),
+    padding 220ms var(--pf-ease),
+    border-width 220ms var(--pf-ease),
+    opacity 160ms ease,
+    transform 220ms var(--pf-ease);
 }
 
 .pf-sidebar-brand {
@@ -215,6 +223,7 @@
 
 .pf-toolbar-content {
   display: flex;
+  flex: 1 1 auto;
   min-width: 0;
   align-items: center;
   gap: 10px;

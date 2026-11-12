@@ -1,8 +1,8 @@
 # Panel Frame
 
-Panel Frame is a React UI package for the shared dashboards and account screens in the Visitoring, Perminister, Nanogres, and Postparticle applications.
+Panel Frame is a reusable React UI package for dashboards, account screens, and shared application interfaces.
 
-The package standardizes structure and interaction patterns while letting each application provide its own brand, route links, account actions, and semantic theme colors.
+It standardizes structure and interaction patterns while letting each consuming application provide its own brand, route links, account actions, and semantic theme colors.
 
 ## Install
 
@@ -26,11 +26,7 @@ The shell owns the left sidebar, mobile drawer, toolbar, and right-hand page are
 import { DashboardShell } from "panel-frame-ui";
 
 <DashboardShell
-  brand={
-    <a className="pf-brand" href="/dashboard">
-      Product
-    </a>
-  }
+  brand={<span className="pf-brand">Product</span>}
   navigation={
     <a className="pf-sidebar-link" href="/dashboard" aria-current="page">
       Overview
@@ -42,8 +38,10 @@ import { DashboardShell } from "panel-frame-ui";
 </DashboardShell>;
 ```
 
+The sidebar brand is the collapse control. Use non-interactive brand content; Panel Frame adds the custom tooltip and keeps the brand available in the toolbar while the sidebar is collapsed.
+
 Use `pf-sidebar-group`, `pf-sidebar-group-label`, and `pf-sidebar-link` for a consistent navigation hierarchy and active state.
-Set `contentAsMain={false}` when the page content already provides its own `<main>` landmark.
+Set `contentAsMain={false}` when the page content already provides its own `<main>` landmark. When `sidebarContext` contains multiple controls, group them in a `<div>` to give them consistent spacing.
 
 ## Authentication shell
 
@@ -59,9 +57,69 @@ import { AuthCard, AuthShell } from "panel-frame-ui";
 
 The app owns all form actions, identity-provider links, and recovery URLs. Panel Frame only provides the common frame and visual primitives.
 
+## Shared controls and overlays
+
+Use `Select` for custom option menus and `ContextSwitcher` for organization, workspace, or project context. Options can include descriptions and icons, while the footer can hold app-owned links or actions.
+
+```tsx
+import { ContextSwitcher, Select } from "panel-frame-ui";
+
+<Select
+  label="Environment"
+  name="environment"
+  options={[
+    { value: "test", label: "Test" },
+    { value: "live", label: "Live", description: "Production data" },
+  ]}
+/>
+
+<ContextSwitcher
+  aria-label="Organization"
+  label="Organization"
+  options={organizations}
+  value={activeOrganizationId}
+  onValueChange={selectOrganization}
+  footer={<a className="pf-select-footer-link" href="/organizations">Manage organizations</a>}
+/>
+```
+
+`Dialog` provides a modal frame. Use `AlertDialog` for a single decision or `ConfirmDialog` for a standard cancel/confirm action pair. Control visibility with `open` and `onOpenChange`; provide app-specific form content or handlers as children/props.
+
+```tsx
+import { AlertDialog, ConfirmDialog, Dialog } from "panel-frame-ui";
+
+<Dialog open={open} onOpenChange={setOpen} title="Edit profile">
+  <ProfileForm />
+</Dialog>
+
+<ConfirmDialog
+  open={confirmOpen}
+  onOpenChange={setConfirmOpen}
+  title="Delete workspace?"
+  description="This action cannot be undone."
+  confirmLabel="Delete workspace"
+  onConfirm={deleteWorkspace}
+/>
+```
+
+`ThemeProvider` standardizes theme state and persistence, `ThemeControl` renders a theme picker, and `getThemeBootstrapScript` returns a script for setting the initial theme before the page paints. Pass the same persistence and system-mode settings to the bootstrap script and provider.
+
+```tsx
+import { ThemeProvider, getThemeBootstrapScript } from "panel-frame-ui";
+
+const themePersistence = { type: "localStorage", key: "my-app-theme" } as const;
+const initialThemeScript = getThemeBootstrapScript(themePersistence);
+
+<ThemeProvider persistence={themePersistence}>
+  <App />
+</ThemeProvider>;
+```
+
+`Tooltip` supports a help-button trigger, a wrapper around existing content, or a `triggerProps` button for integrations that need to preserve their own event handlers and attributes.
+
 ## Components
 
-The package exports `DashboardShell`, `AuthShell`, `AuthCard`, `Button`, `Card`, `Badge`, `Alert`, `Field`, `TextField`, `SelectField`, `EmptyState`, `Skeleton`, `PageHeader`, and `ThemeSelect`.
+The package exports `DashboardShell`, `AuthShell`, `AuthCard`, `Button`, `Card`, `Badge`, `Alert`, `Field`, `TextField`, `SelectField`, `EmptyState`, `Skeleton`, `PageHeader`, `Select`, `ContextSwitcher`, `Dialog`, `AlertDialog`, `ConfirmDialog`, `Tooltip`, `ThemeProvider`, `ThemeControl`, `ThemeSelect`, `useTheme`, and `getThemeBootstrapScript`.
 
 React and React DOM are peer dependencies. The package does not depend on Next.js; pass framework links as React children in the app-owned navigation.
 

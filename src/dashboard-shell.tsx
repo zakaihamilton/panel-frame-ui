@@ -7,6 +7,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
+import { Tooltip } from "./tooltip.js";
 
 export type DashboardShellProps = {
   brand: ReactNode;
@@ -14,7 +15,6 @@ export type DashboardShellProps = {
   sidebarContext?: ReactNode;
   sidebarFooter?: ReactNode;
   toolbar?: ReactNode;
-  sidebarVisible?: boolean;
   contentAsMain?: boolean;
   children: ReactNode;
 };
@@ -28,15 +28,18 @@ export function DashboardShell({
   sidebarContext,
   sidebarFooter,
   toolbar,
-  sidebarVisible = true,
   contentAsMain = true,
   children,
 }: DashboardShellProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(true);
   const sidebarRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const sidebarBrandRef = useRef<HTMLButtonElement>(null);
+  const toolbarBrandRef = useRef<HTMLButtonElement>(null);
   const wasMobileOpenRef = useRef(false);
+  const previousSidebarVisibleRef = useRef(sidebarVisible);
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 780px)");
@@ -59,6 +62,13 @@ export function DashboardShell({
       if (isMobile) triggerRef.current?.focus();
     }
   }, [isMobile, mobileOpen]);
+
+  useEffect(() => {
+    if (isMobile || previousSidebarVisibleRef.current === sidebarVisible)
+      return;
+    previousSidebarVisibleRef.current = sidebarVisible;
+    (sidebarVisible ? sidebarBrandRef : toolbarBrandRef).current?.focus();
+  }, [isMobile, sidebarVisible]);
 
   useEffect(() => {
     if (!isMobile || !mobileOpen) return;
@@ -125,6 +135,16 @@ export function DashboardShell({
     setMobileOpen(false);
   }
 
+  function toggleSidebar() {
+    if (isMobile) {
+      closeDrawer();
+      return;
+    }
+    setSidebarVisible((visible) => !visible);
+  }
+
+  const sidebarBrandLabel = isMobile ? "Close navigation" : "Collapse sidebar";
+
   return (
     <div
       className="pf-dashboard-shell"
@@ -155,7 +175,23 @@ export function DashboardShell({
         role={isMobile && mobileOpen ? "dialog" : undefined}
         tabIndex={-1}
       >
-        <div className="pf-sidebar-brand">{brand}</div>
+        {isMobile || sidebarVisible ? (
+          <div className="pf-sidebar-brand">
+            <Tooltip label={sidebarBrandLabel} placement="right">
+              <button
+                aria-controls="pf-dashboard-sidebar"
+                aria-expanded={isMobile ? mobileOpen : sidebarVisible}
+                aria-label={sidebarBrandLabel}
+                className="pf-sidebar-brand-toggle"
+                onClick={toggleSidebar}
+                ref={sidebarBrandRef}
+                type="button"
+              >
+                {brand}
+              </button>
+            </Tooltip>
+          </div>
+        ) : null}
         {sidebarContext ? (
           <div className="pf-sidebar-context">{sidebarContext}</div>
         ) : null}
@@ -182,6 +218,21 @@ export function DashboardShell({
         inert={isMobile && mobileOpen}
       >
         <header className="pf-dashboard-toolbar">
+          {!isMobile && !sidebarVisible ? (
+            <Tooltip label="Expand sidebar" placement="bottom">
+              <button
+                aria-controls="pf-dashboard-sidebar"
+                aria-expanded={sidebarVisible}
+                aria-label="Expand sidebar"
+                className="pf-toolbar-brand-toggle"
+                onClick={toggleSidebar}
+                ref={toolbarBrandRef}
+                type="button"
+              >
+                {brand}
+              </button>
+            </Tooltip>
+          ) : null}
           <button
             aria-controls="pf-dashboard-sidebar"
             aria-expanded={mobileOpen}

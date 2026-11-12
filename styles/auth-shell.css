@@ -1,0 +1,104 @@
+.pf-auth-shell {
+  display: grid;
+  min-height: 100vh;
+  place-items: stretch center;
+  padding: clamp(16px, 4vw, 56px);
+  color: var(--pf-text);
+  background: var(--pf-background);
+  font-family: var(--pf-font, inherit);
+}
+
+.pf-auth-layout {
+  display: grid;
+  width: min(1120px, 100%);
+  min-height: min(740px, calc(100vh - 2 * clamp(16px, 4vw, 56px)));
+  grid-template-columns: minmax(0, 1fr) minmax(390px, 0.84fr);
+  overflow: hidden;
+  border: 1px solid var(--pf-border);
+  border-radius: var(--pf-radius-lg);
+  background: var(--pf-surface);
+  box-shadow: var(--pf-shadow);
+}
+
+.pf-auth-aside {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: clamp(28px, 5vw, 58px);
+  background: color-mix(in srgb, var(--pf-accent) 7%, var(--pf-background));
+}
+
+.pf-auth-brand {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 740;
+}
+
+.pf-auth-aside-content {
+  display: grid;
+  flex: 1;
+  align-content: center;
+  gap: 16px;
+  padding: 38px 0;
+}
+
+.pf-auth-aside-content h1,
+.pf-auth-aside-content h2 {
+  max-width: 540px;
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.055em;
+}
+
+.pf-auth-aside-content p {
+  max-width: 490px;
+  margin: 0;
+  color: var(--pf-muted);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.pf-auth-aside-footer {
+  color: var(--pf-muted);
+  font-size: 13px;
+}
+
+.pf-auth-main {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(22px, 4vw, 52px);
+}
+
+.pf-auth-utility {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+}
+
+.pf-auth-content {
+  width: min(100%, 460px);
+  margin: 0 auto;
+}
+
+.pf-auth-card {
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--pf-border);
+  border-radius: var(--pf-radius-md);
+  color: var(--pf-text);
+  background: var(--pf-surface-raised);
+  box-shadow: var(--pf-shadow);
+}
+
+.pf-auth-card > :first-child {
+  margin-top: 0;
+}
+
+.pf-auth-card > :last-child {
+  margin-bottom: 0;
+}

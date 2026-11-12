@@ -6,6 +6,7 @@ import {
   type ReactNode,
   type SelectHTMLAttributes,
 } from "react";
+import { mergeAriaDescriptionIds } from "./aria.js";
 
 export type ButtonVariant = "primary" | "secondary" | "quiet" | "danger";
 
@@ -107,11 +108,6 @@ export function Field({
   );
 }
 
-function mergeDescribedBy(...values: (string | undefined)[]) {
-  const ids = values.flatMap((value) => value?.split(/\s+/) ?? []);
-  return [...new Set(ids.filter(Boolean))].join(" ") || undefined;
-}
-
 export function TextField({
   label,
   hint,
@@ -133,7 +129,7 @@ export function TextField({
         <input
           {...fieldProps}
           {...inputProps}
-          aria-describedby={mergeDescribedBy(
+          aria-describedby={mergeAriaDescriptionIds(
             fieldProps["aria-describedby"],
             ariaDescribedBy,
           )}
@@ -168,7 +164,7 @@ export function SelectField({
         <select
           {...fieldProps}
           {...selectProps}
-          aria-describedby={mergeDescribedBy(
+          aria-describedby={mergeAriaDescriptionIds(
             fieldProps["aria-describedby"],
             ariaDescribedBy,
           )}

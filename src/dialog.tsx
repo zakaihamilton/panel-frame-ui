@@ -75,6 +75,7 @@ export function Dialog({
   }, [initialFocusRef, open]);
 
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: The native dialog backdrop is pointer-only; Escape and the close button provide keyboard dismissal.
     <dialog
       aria-busy={ariaBusy || undefined}
       aria-describedby={description ? descriptionId : undefined}

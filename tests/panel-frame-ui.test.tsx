@@ -75,9 +75,10 @@ describe("DashboardShell", () => {
     expect(document.activeElement).toBe(closeNavigation);
     const descriptionId = closeNavigation.getAttribute("aria-describedby");
     expect(descriptionId).toBeTruthy();
-    expect(document.getElementById(descriptionId!)?.textContent).toBe(
-      "Close navigation",
-    );
+    const description = descriptionId
+      ? document.getElementById(descriptionId)
+      : null;
+    expect(description?.textContent).toBe("Close navigation");
     expect(document.body.style.overflow).toBe("hidden");
 
     fireEvent.keyDown(document, { key: "Tab", shiftKey: true });

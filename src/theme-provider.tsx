@@ -67,6 +67,7 @@ function saveTheme(theme: ThemeChoice, persistence: ThemePersistence) {
     } else if (persistence.type === "cookie") {
       const secure = window.location.protocol === "https:" ? "; Secure" : "";
       const maxAge = persistence.maxAge ?? 31_536_000;
+      // biome-ignore lint/suspicious/noDocumentCookie: This synchronous fallback works in browsers without the Cookie Store API.
       document.cookie = `${encodeURIComponent(persistence.name)}=${encodeURIComponent(theme)}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secure}`;
     }
   } catch {

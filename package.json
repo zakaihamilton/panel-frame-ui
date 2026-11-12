@@ -46,7 +46,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "lint": "eslint .",
+    "lint": "biome lint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
@@ -63,15 +63,11 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
+    "@biomejs/biome": "2.6.6",
     "@changesets/cli": "^3.0.3",
-    "@eslint/js": "^9.39.5",
     "@testing-library/react": "^16.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "eslint": "^9.39.5",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "globals": "^17.14.0",
     "jscpd": "^5.4.3",
     "jsdom": "^31.0.0",
     "knip": "^6.44.2",
@@ -79,7 +75,6 @@
     "publint": "^0.3.25",
     "repnix": "^1.1.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.2",
     "vitest": "^5.1.0"
   },
   "knip": {

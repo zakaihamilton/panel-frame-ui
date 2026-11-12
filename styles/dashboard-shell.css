@@ -60,6 +60,43 @@
   padding: 0 10px 17px;
 }
 
+.pf-sidebar-brand-toggle,
+.pf-toolbar-brand-toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: var(--pf-radius-sm);
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pf-sidebar-brand-toggle {
+  width: 100%;
+  min-height: 46px;
+  padding: 0;
+}
+
+.pf-toolbar-brand-toggle {
+  display: none;
+  min-height: 40px;
+  margin-right: auto;
+  padding: 0 10px;
+}
+
+.pf-sidebar-brand-toggle:hover,
+.pf-toolbar-brand-toggle:hover {
+  background: color-mix(in srgb, var(--pf-accent) 7%, var(--pf-surface));
+}
+
+.pf-dashboard-shell[data-sidebar-visible="false"] .pf-toolbar-brand-toggle {
+  display: inline-flex;
+}
+
 .pf-sidebar-brand > a,
 .pf-brand {
   display: inline-flex;

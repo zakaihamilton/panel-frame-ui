@@ -26,7 +26,7 @@ describe("DashboardShell", () => {
   it("keeps the sidebar and page content in the shared dashboard frame", () => {
     render(
       <DashboardShell
-        brand={<a href="/">Panel Frame</a>}
+        brand={<span className="pf-brand">Panel Frame</span>}
         navigation={
           <nav aria-label="Product">
             <a href="/overview">Overview</a>
@@ -54,7 +54,7 @@ describe("DashboardShell", () => {
     mockMatchMedia(true);
     render(
       <DashboardShell
-        brand={<a href="/">Panel Frame</a>}
+        brand={<span className="pf-brand">Panel Frame</span>}
         navigation={
           <nav>
             <a href="/overview">Overview</a>
@@ -72,7 +72,7 @@ describe("DashboardShell", () => {
     const drawer = screen.getByRole("dialog", { name: "Primary navigation" });
     expect(drawer.getAttribute("aria-modal")).toBe("true");
     expect(document.activeElement).toBe(
-      screen.getByRole("link", { name: "Panel Frame" }),
+      screen.getByRole("button", { name: "Close navigation" }),
     );
     expect(document.body.style.overflow).toBe("hidden");
 
@@ -82,7 +82,7 @@ describe("DashboardShell", () => {
     );
     fireEvent.keyDown(document, { key: "Tab" });
     expect(document.activeElement).toBe(
-      screen.getByRole("link", { name: "Panel Frame" }),
+      screen.getByRole("button", { name: "Close navigation" }),
     );
 
     fireEvent.keyDown(document, { key: "Escape" });
@@ -100,7 +100,7 @@ describe("DashboardShell", () => {
     mockMatchMedia(true);
     render(
       <DashboardShell
-        brand={<a href="/">Panel Frame</a>}
+        brand={<span className="pf-brand">Panel Frame</span>}
         navigation={
           <nav>
             <a href="/settings" onClick={(event) => event.preventDefault()}>
@@ -158,9 +158,8 @@ describe("ThemeSelect", () => {
     const onChange = vi.fn();
     render(<ThemeSelect value="light" onChange={onChange} />);
 
-    fireEvent.change(screen.getByRole("combobox", { name: "Color theme" }), {
-      target: { value: "dark" },
-    });
+    fireEvent.click(screen.getByRole("combobox", { name: "Color theme" }));
+    fireEvent.click(screen.getByRole("option", { name: "Dark" }));
 
     expect(onChange).toHaveBeenCalledWith("dark");
   });

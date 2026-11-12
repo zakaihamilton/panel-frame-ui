@@ -1,5 +1,11 @@
 # panel-frame-ui
 
+## 0.2.3
+
+### Patch Changes
+
+- ccc8213: Keep mobile drawer dismissal clickable, preserve visible brand names in accessible labels, and place select popovers inside a named landmark.
+
 ## 0.2.2
 
 ### Patch Changes

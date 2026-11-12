@@ -1,5 +1,11 @@
 # panel-frame-ui
 
+## 0.2.5
+
+### Patch Changes
+
+- 104f027: Keep the sidebar brand toggle anchored through collapse, smooth the sidebar transition, and improve tooltip dismissal and placement.
+
 ## 0.2.4
 
 ### Patch Changes

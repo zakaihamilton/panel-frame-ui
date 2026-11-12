@@ -201,7 +201,7 @@ export function Select({
   }, [activeIndex, listboxId, open]);
 
   function openMenu(
-    startIndex = selectedIndex >= 0 ? selectedIndex : 0,
+    startIndex = Math.max(selectedIndex, 0),
     direction: 1 | -1 = 1,
   ) {
     if (isDisabled) return;
@@ -312,10 +312,9 @@ export function Select({
 
   const popup =
     open && position && typeof document !== "undefined" ? (
-      <div
+      <section
         aria-label={`${typeof label === "string" ? label : (ariaLabel ?? "Select")} options`}
         className="pf-select-popup"
-        role="region"
         style={{
           left: position.left,
           maxHeight: position.maxHeight,
@@ -340,11 +339,18 @@ export function Select({
                 id={`${listboxId}-option-${index}`}
                 key={option.value}
                 onClick={() => chooseOption(index)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    chooseOption(index);
+                  }
+                }}
                 onMouseEnter={() => {
                   if (!option.disabled) setActiveIndex(index);
                 }}
                 onMouseDown={(event) => event.preventDefault()}
                 role="option"
+                tabIndex={-1}
               >
                 {option.icon ? (
                   <span className="pf-select-option-icon">{option.icon}</span>
@@ -367,7 +373,7 @@ export function Select({
           })}
         </div>
         {footer ? <div className="pf-select-footer">{footer}</div> : null}
-      </div>
+      </section>
     ) : null;
 
   return (

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -40,6 +41,7 @@ export function DashboardShell({
   const toolbarBrandRef = useRef<HTMLButtonElement>(null);
   const wasMobileOpenRef = useRef(false);
   const previousSidebarVisibleRef = useRef(sidebarVisible);
+  const closeDrawer = useCallback(() => setMobileOpen(false), []);
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 780px)");
@@ -119,7 +121,7 @@ export function DashboardShell({
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [isMobile, mobileOpen]);
+  }, [closeDrawer, isMobile, mobileOpen]);
 
   function closeAfterNavigation(event: MouseEvent<HTMLElement>) {
     if (
@@ -129,10 +131,6 @@ export function DashboardShell({
     ) {
       closeDrawer();
     }
-  }
-
-  function closeDrawer() {
-    setMobileOpen(false);
   }
 
   function toggleSidebar() {
@@ -152,13 +150,14 @@ export function DashboardShell({
       data-sidebar-visible={sidebarVisible ? "true" : "false"}
     >
       <a
-        aria-hidden={isMobile && mobileOpen ? true : undefined}
+        aria-label="Skip to main content"
         className="pf-skip-link"
         href="#pf-main-content"
         inert={isMobile && mobileOpen}
       >
         Skip to main content
       </a>
+      {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: The sidebar becomes a dialog only while the mobile drawer is open. */}
       <aside
         ref={sidebarRef}
         aria-hidden={
@@ -172,7 +171,7 @@ export function DashboardShell({
         id="pf-dashboard-sidebar"
         inert={(isMobile && !mobileOpen) || (!isMobile && !sidebarVisible)}
         onClick={closeAfterNavigation}
-        role={isMobile && mobileOpen ? "dialog" : undefined}
+        role={isMobile && mobileOpen ? "dialog" : "complementary"}
         tabIndex={-1}
       >
         {isMobile || sidebarVisible ? (

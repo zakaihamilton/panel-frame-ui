@@ -272,6 +272,11 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 1.7;
+  transition: transform 160ms var(--pf-ease);
+}
+
+.pf-select-chevron[data-open="true"] {
+  transform: rotate(180deg);
 }
 
 .pf-select-compact .pf-select-trigger {
@@ -507,6 +512,12 @@
   min-height: 34px;
   padding: 5px 9px;
   font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-select-chevron {
+    transition: none;
+  }
 }
 
 @keyframes pf-skeleton-pulse {

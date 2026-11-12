@@ -442,6 +442,7 @@ export function Select({
           <svg
             aria-hidden="true"
             className="pf-select-chevron"
+            data-open={open ? "true" : "false"}
             viewBox="0 0 16 16"
             fill="none"
           >

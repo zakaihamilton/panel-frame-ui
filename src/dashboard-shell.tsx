@@ -181,7 +181,6 @@ export function DashboardShell({
               <button
                 aria-controls="pf-dashboard-sidebar"
                 aria-expanded={isMobile ? mobileOpen : sidebarVisible}
-                aria-label={sidebarBrandLabel}
                 className="pf-sidebar-brand-toggle"
                 onClick={toggleSidebar}
                 ref={sidebarBrandRef}
@@ -223,7 +222,6 @@ export function DashboardShell({
               <button
                 aria-controls="pf-dashboard-sidebar"
                 aria-expanded={sidebarVisible}
-                aria-label="Expand sidebar"
                 className="pf-toolbar-brand-toggle"
                 onClick={toggleSidebar}
                 ref={toolbarBrandRef}

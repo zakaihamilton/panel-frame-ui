@@ -313,7 +313,9 @@ export function Select({
   const popup =
     open && position && typeof document !== "undefined" ? (
       <div
+        aria-label={`${typeof label === "string" ? label : (ariaLabel ?? "Select")} options`}
         className="pf-select-popup"
+        role="region"
         style={{
           left: position.left,
           maxHeight: position.maxHeight,

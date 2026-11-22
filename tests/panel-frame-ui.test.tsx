@@ -1,3 +1,4 @@
+import { createRef } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import {
@@ -5,6 +6,7 @@ import {
   AuthShell,
   DashboardShell,
   ThemeSelect,
+  Tooltip,
 } from "../src/index.js";
 
 function mockMatchMedia(matches: boolean) {
@@ -165,5 +167,44 @@ describe("ThemeSelect", () => {
     fireEvent.click(screen.getByRole("option", { name: "Dark" }));
 
     expect(onChange).toHaveBeenCalledWith("dark");
+  });
+});
+
+describe("Tooltip", () => {
+  it("forwards external triggerProps ref and shows positioned tooltip on focus", () => {
+    const buttonRef = createRef<HTMLButtonElement>();
+    render(
+      <Tooltip
+        content="Copy token"
+        placement="bottom"
+        triggerProps={{
+          "aria-label": "Copy",
+          ref: buttonRef,
+          type: "button",
+        }}
+      />,
+    );
+
+    const button = screen.getByRole("button", { name: "Copy" });
+    expect(buttonRef.current).toBe(button);
+
+    fireEvent.focus(button);
+    const tooltip = screen.getByRole("tooltip", { hidden: true });
+    expect(tooltip.textContent).toBe("Copy token");
+    expect(tooltip.getAttribute("data-placement")).toBe("bottom");
+  });
+
+  it("merges callback ref on cloned child element", () => {
+    const childRef = vi.fn();
+    render(
+      <Tooltip content="More info">
+        <button ref={childRef} type="button">
+          Help
+        </button>
+      </Tooltip>,
+    );
+
+    const button = screen.getByRole("button", { name: "Help" });
+    expect(childRef).toHaveBeenCalledWith(button);
   });
 });

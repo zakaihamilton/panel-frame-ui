@@ -5,7 +5,6 @@ import {
   cloneElement,
   isValidElement,
   useId,
-  useLayoutEffect,
   useRef,
   useState,
   type FocusEvent,
@@ -17,8 +16,11 @@ import {
   type ComponentProps,
 } from "react";
 import { mergeAriaDescriptionIds } from "./aria.js";
-
-type TooltipPlacement = "top" | "bottom" | "left" | "right";
+import { mergeRefs } from "./internal/mergeRefs.js";
+import {
+  useTooltipPosition,
+  type TooltipPlacement,
+} from "./internal/useFloatingPosition.js";
 
 type TriggerProps = {
   "aria-describedby"?: string;
@@ -47,12 +49,6 @@ type TooltipProps = {
   triggerProps?: Omit<ComponentProps<"button">, "children">;
 };
 
-type TooltipPosition = {
-  left: number;
-  top: number;
-  placement: TooltipPlacement;
-};
-
 export function Tooltip({
   content,
   label,
@@ -72,142 +68,14 @@ export function Tooltip({
   const tooltipRef = useRef<HTMLSpanElement>(null);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
-  const [position, setPosition] = useState<TooltipPosition>({
-    left: 0,
-    top: 0,
-    placement,
-  });
   const tooltipContent = content ?? label;
   const visible = Boolean(tooltipContent) && (hovered || focused);
-
-  useLayoutEffect(() => {
-    if (!visible) return;
-    const updatePosition = () => {
-      const target = triggerRef.current?.getBoundingClientRect();
-      const bubble = tooltipRef.current?.getBoundingClientRect();
-      if (!target || !bubble) return;
-      const edge = 12;
-      const gap = 8;
-      const availableSpace: Record<TooltipPlacement, number> = {
-        top: target.top - edge - gap,
-        bottom: window.innerHeight - target.bottom - edge - gap,
-        left: target.left - edge - gap,
-        right: window.innerWidth - target.right - edge - gap,
-      };
-      const requiredSpace: Record<TooltipPlacement, number> = {
-        top: bubble.height,
-        bottom: bubble.height,
-        left: bubble.width,
-        right: bubble.width,
-      };
-      const opposite: Record<TooltipPlacement, TooltipPlacement> = {
-        top: "bottom",
-        bottom: "top",
-        left: "right",
-        right: "left",
-      };
-      const candidates = [
-        placement,
-        opposite[placement],
-        ...(placement === "top" || placement === "bottom"
-          ? (["right", "left"] as const)
-          : (["top", "bottom"] as const)),
-      ];
-      const resolvedPlacement =
-        candidates.find(
-          (candidate) => availableSpace[candidate] >= requiredSpace[candidate],
-        ) ??
-        candidates.reduce((best, candidate) =>
-          availableSpace[candidate] > availableSpace[best] ? candidate : best,
-        );
-      let left = target.left + target.width / 2 - bubble.width / 2;
-      let top = target.top - bubble.height - gap;
-      if (resolvedPlacement === "bottom") top = target.bottom + gap;
-      if (resolvedPlacement === "left") {
-        left = target.left - bubble.width - gap;
-        top = target.top + target.height / 2 - bubble.height / 2;
-      }
-      if (resolvedPlacement === "right") {
-        left = target.right + gap;
-        top = target.top + target.height / 2 - bubble.height / 2;
-      }
-      left = Math.max(
-        edge,
-        Math.min(left, window.innerWidth - bubble.width - edge),
-      );
-      top = Math.max(
-        edge,
-        Math.min(top, window.innerHeight - bubble.height - edge),
-      );
-      setPosition((current) => {
-        if (
-          current.placement === resolvedPlacement &&
-          Math.abs(current.left - left) < 0.5 &&
-          Math.abs(current.top - top) < 0.5
-        ) {
-          return current;
-        }
-        return { left, top, placement: resolvedPlacement };
-      });
-    };
-
-    let activeTransitions = 0;
-    let animationFrame: number | null = null;
-    const trackPosition = () => {
-      updatePosition();
-      if (activeTransitions > 0) {
-        animationFrame = window.requestAnimationFrame(trackPosition);
-      } else {
-        animationFrame = null;
-      }
-    };
-    const eventIncludesTrigger = (event: Event) =>
-      event.target instanceof Element &&
-      (event.target === triggerRef.current ||
-        event.target.contains(triggerRef.current));
-    const onTransitionRun = (event: Event) => {
-      if (!eventIncludesTrigger(event)) return;
-      activeTransitions += 1;
-      if (animationFrame === null) {
-        animationFrame = window.requestAnimationFrame(trackPosition);
-      }
-    };
-    const onTransitionFinish = (event: Event) => {
-      if (!eventIncludesTrigger(event)) return;
-      activeTransitions = Math.max(0, activeTransitions - 1);
-      updatePosition();
-      if (activeTransitions === 0 && animationFrame !== null) {
-        window.cancelAnimationFrame(animationFrame);
-        animationFrame = null;
-      }
-    };
-
-    const resizeObserver =
-      typeof ResizeObserver === "undefined"
-        ? null
-        : new ResizeObserver(updatePosition);
-    if (triggerRef.current) resizeObserver?.observe(triggerRef.current);
-    if (tooltipRef.current) resizeObserver?.observe(tooltipRef.current);
-    updatePosition();
-    window.addEventListener("resize", updatePosition);
-    document.addEventListener("scroll", updatePosition, true);
-    document.addEventListener("transitionrun", onTransitionRun, true);
-    document.addEventListener("transitionend", onTransitionFinish, true);
-    document.addEventListener("transitioncancel", onTransitionFinish, true);
-    return () => {
-      resizeObserver?.disconnect();
-      window.removeEventListener("resize", updatePosition);
-      document.removeEventListener("scroll", updatePosition, true);
-      document.removeEventListener("transitionrun", onTransitionRun, true);
-      document.removeEventListener("transitionend", onTransitionFinish, true);
-      document.removeEventListener(
-        "transitioncancel",
-        onTransitionFinish,
-        true,
-      );
-      if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
-    };
-  }, [placement, visible]);
+  const position = useTooltipPosition({
+    visible,
+    placement,
+    triggerRef,
+    tooltipRef,
+  });
 
   function handleBlur(event: FocusEvent<HTMLElement>) {
     if (!event.currentTarget.contains(event.relatedTarget as Node | null))
@@ -298,12 +166,10 @@ export function Tooltip({
           onTriggerPointerLeave?.(event);
           if (event.pointerType !== "touch") setHovered(false);
         }}
-        ref={(element) => {
-          triggerRef.current = element;
-          if (typeof triggerExternalRef === "function")
-            triggerExternalRef(element);
-          else if (triggerExternalRef) triggerExternalRef.current = element;
-        }}
+        ref={mergeRefs<HTMLElement, HTMLButtonElement>(
+          triggerRef,
+          triggerExternalRef,
+        )}
       >
         {children ?? <span aria-hidden="true">i</span>}
       </button>
@@ -380,11 +246,7 @@ export function Tooltip({
         child.props.onMouseLeave?.(event);
         handlers.onMouseLeave();
       },
-      ref: (element: HTMLElement | null) => {
-        triggerRef.current = element;
-        if (typeof childRef === "function") childRef(element);
-        else if (childRef) childRef.current = element;
-      },
+      ref: mergeRefs(triggerRef, childRef),
     });
   } else {
     trigger = (

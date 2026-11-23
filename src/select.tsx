@@ -6,12 +6,12 @@ import {
   useCallback,
   useEffect,
   useId,
-  useLayoutEffect,
   useRef,
   useState,
   type KeyboardEvent,
   type ReactNode,
 } from "react";
+import { useSelectPosition } from "./internal/useFloatingPosition.js";
 
 export type SelectOption = {
   value: string;
@@ -25,13 +25,6 @@ export type SelectOption = {
 
 export type SelectVariant = "default" | "compact" | "context";
 export type SelectAlign = "start" | "end";
-
-type PopupPosition = {
-  left: number;
-  top: number;
-  width: number;
-  maxHeight: number;
-};
 
 type SelectProps = {
   options: readonly SelectOption[];
@@ -102,7 +95,13 @@ export function Select({
   const [open, setOpen] = useState(false);
   const [invalid, setInvalid] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [position, setPosition] = useState<PopupPosition | null>(null);
+  const [position, resetPosition] = useSelectPosition({
+    open,
+    triggerRef,
+    optionCount: options.length,
+    minWidth: variant === "context" ? 240 : 176,
+    align,
+  });
 
   const selectedValue = value ?? uncontrolledValue;
   const selectedIndex = options.findIndex(
@@ -129,51 +128,6 @@ export function Select({
     },
     [options],
   );
-
-  const updatePosition = useCallback(() => {
-    const trigger = triggerRef.current;
-    if (!trigger) return;
-    const rect = trigger.getBoundingClientRect();
-    const edge = 12;
-    const minWidth = variant === "context" ? 240 : 176;
-    const width = Math.min(
-      Math.max(rect.width, minWidth),
-      window.innerWidth - edge * 2,
-    );
-    const below = window.innerHeight - rect.bottom - edge;
-    const above = rect.top - edge;
-    const desiredHeight = Math.min(Math.max(options.length * 48 + 8, 56), 320);
-    const openAbove = below < desiredHeight && above > below;
-    const maxHeight = Math.max(
-      56,
-      Math.min(desiredHeight, openAbove ? above : below),
-    );
-    const preferredLeft = align === "end" ? rect.right - width : rect.left;
-    const left = Math.max(
-      edge,
-      Math.min(preferredLeft, window.innerWidth - width - edge),
-    );
-    setPosition({
-      left,
-      top: openAbove
-        ? Math.max(edge, rect.top - maxHeight - 6)
-        : rect.bottom + 6,
-      width,
-      maxHeight,
-    });
-  }, [align, options.length, variant]);
-
-  useLayoutEffect(() => {
-    if (!open) return;
-    updatePosition();
-    const update = () => updatePosition();
-    window.addEventListener("resize", update);
-    document.addEventListener("scroll", update, true);
-    return () => {
-      window.removeEventListener("resize", update);
-      document.removeEventListener("scroll", update, true);
-    };
-  }, [open, updatePosition]);
 
   useEffect(() => {
     if (!open) return;
@@ -208,7 +162,7 @@ export function Select({
     const nextIndex = findEnabledIndex(startIndex, direction);
     if (nextIndex < 0) return;
     setActiveIndex(nextIndex);
-    setPosition(null);
+    resetPosition();
     setOpen(true);
   }
 
